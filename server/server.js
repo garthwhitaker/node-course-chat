@@ -11,11 +11,21 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 io.on('connection', (socket) => {
-    
+
     console.log('New user connected');
 
-    socket.on('disconnect', (socket) => {
+    socket.on('disconnect', () => {
         console.log('User disconnected');
+    });
+
+    socket.emit('newMessage', {
+        from: 'Garth',
+        text: 'I am NodeJS',
+        createdAt: new Date().toDateString()
+    });
+
+    socket.on('createMessage', (createMessage) => {
+        console.log('Create message: ', createMessage);
     });
 });
 
