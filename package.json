@@ -8,11 +8,12 @@
     "start": "node server/server.js"
   },
   "engines": {
-   "node": "7.2.0"
+    "node": "7.2.0"
   },
   "author": "Garth Whitaker",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "socket.io": "^1.7.2"
   }
 }
