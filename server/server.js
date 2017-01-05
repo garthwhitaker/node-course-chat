@@ -15,16 +15,19 @@ io.on('connection', (socket) => {
 
     console.log('New user connected');
 
-    socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
-    socket.broadcast.emit('newMessage', generateMessage('Admin','New user joined'));
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
 
-    socket.on('createMessage', (createMessage) => {
+    socket.on('createMessage', (createMessage, callback) => {
+
         console.log('Create message: ', createMessage);
-        io.emit('newMessage', generateMessage( createMessage.from,createMessage.text));
+
+        io.emit('newMessage', generateMessage(createMessage.from, createMessage.text));
+        callback('This is from the server');
         // socket.broadcast.emit('newMessage',{
         //     from: createMessage.from,
         //     text: createMessage.text,
