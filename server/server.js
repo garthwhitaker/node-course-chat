@@ -21,24 +21,23 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         var user = users.removeUser(socket.id);
-        if(user)
-        {
-            io.to(user.room).emit('updateUserList',users.getUserList(user.room));
+        if (user) {
+            io.to(user.room).emit('updateUserList', users.getUserList(user.room));
             io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`))
         }
 
-    
+
     });
 
     socket.on('join', (params, callback) => {
 
         if (!isRealString(params.name) || !isRealString(params.room)) {
-           return callback('Name and room name are required.');
+            return callback('Name and room name are required.');
         }
 
         socket.join(params.room);
         users.removeUser(socket.id);
-        users.addUser(socket.id, params.name,params.room);
+        users.addUser(socket.id, params.name, params.room);
 
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
 
@@ -49,15 +48,23 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createMessage', (createMessage, callback) => {
+        var user = users.getUser(socket.id);
 
-        console.log('Create message: ', createMessage);
+        if (user && isRealString(createMessage.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, createMessage.text));
+        }
 
-        io.emit('newMessage', generateMessage(createMessage.from, createMessage.text));
         callback();
     });
 
     socket.on('createLocationMessage', (location, callback) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', location.latitude, location.longitude));
+
+        var user = users.getUser(socket.id);
+
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, location.latitude, location.longitude));
+        }
+
         callback();
     });
 });

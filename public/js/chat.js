@@ -93,7 +93,6 @@ $('#message-form').on('submit', function (event) {
     event.preventDefault();
 
     socket.emit('createMessage', {
-        from: 'Garth',
         text: messageTextbox.val()
     }, function () {
         messageTextbox.val('');
